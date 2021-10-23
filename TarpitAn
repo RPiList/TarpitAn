@@ -4,7 +4,6 @@ import java.io.IOException
 import java.io.InputStream
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import javax.swing.JOptionPane.showMessageDialog
 
 val lineList = mutableListOf<String>()
 val Liste1 = mutableListOf<String>()
@@ -12,7 +11,6 @@ val Liste2 = mutableListOf<String>()
 val Liste3 = mutableListOf<String>()
 val Liste4 = mutableListOf<String>()
 val Liste5 = mutableListOf<String>()
-val ListeConfig = mutableListOf<String>()
 var zaehler:Long = 0
 var zaehler2:Long = 0
 var sekundensumme:Long = 0
@@ -24,30 +22,14 @@ var fileName = "ip-locations.txt"
 var fileName2 = "log.txt"
 var fileName3 = "data.txt"
 var fileName4 = "result.txt"
-val fileconfig = "config.txt"
-
+var message3 = " Reading Data."
+var message5 = " Writing Data"
+var message6 = " Process finished. \r"
 
 fun main() {
 
-    val fileconf = File(fileconfig)
-    val fileconfExists = fileconf.exists()
 
-    if (fileconfExists) {
-        val inputStream99: InputStream = File(path + "\\config.txt").inputStream()
-        inputStream99.bufferedReader().forEachLine { ListeConfig.add(it) }
-            fileName = ListeConfig.elementAt(0)
-            fileName2 = ListeConfig.elementAt(1)
-            fileName3 = ListeConfig.elementAt(2)
-            fileName4 = ListeConfig.elementAt(3)
-    }
-    else
-        {
-            fileName = "ip-locations.txt"
-            fileName2 = "log.txt"
-            fileName3 = "data.txt"
-            fileName4 = "result.txt"
-        }
-
+    println(message3)
         val inputStream2: InputStream = File(path + "\\" + fileName).inputStream()
         inputStream2.bufferedReader().forEachLine { Liste5.add(it) }
 
@@ -55,8 +37,12 @@ fun main() {
 
         inputStream.bufferedReader().forEachLine { lineList.add(it) }
         lineList.forEach { datenaufbereitung(it) }
+
+        println(message5)
+        println("  ")
         analyse()
-        showMessageDialog(null, "Fertig.")
+        println("  ")
+        println(message6)
 }
 
 fun datenaufbereitung(zeile: String) {
@@ -83,6 +69,8 @@ fun analyse(){
     //dateikopf()
 
     for (i in 0..anzahlzeilen) {
+
+
         if (Liste4.elementAt(i).toString() == "connected" ) {
 
             zaehler2 = zaehler2 + 1
@@ -137,6 +125,10 @@ fun analyse(){
                 }
             }
         }
+
+        var percentage = (i.toDouble() / anzahlzeilen.toDouble()) * 100
+        var prozent: Int = percentage.toInt()
+        print( "   " + prozent.toString() + "% \r")
     }
 
     val hours2:Long =   sekundensumme / 3600
@@ -160,13 +152,12 @@ fun analyse(){
     val text =  "Connected: " + zaehler2.toString() +  System.getProperty("line.separator") +
             "Disconnected: " + zaehler.toString() +  System.getProperty("line.separator") +
             "Stuck in Tarpit: " + stuckinpit.toString() +  System.getProperty("line.separator") +
-            "Zeit in Sekunden komplett: " + sekundensumme.toString()  +  System.getProperty("line.separator") +
-            "Zeit komplett: " + zeit2 +  System.getProperty("line.separator") +
-            "Durchschnitt in Sekunden: " + durchschnitt.toString()  +  System.getProperty("line.separator") +
-            "Durchschnitt: " + zeit3 +  System.getProperty("line.separator") +
-            "Längste Dauer: " + zeit4 + System.getProperty("line.separator") +
-            "Kürzeste Dauer: " + sekundenshortest.toString()
-
+            "Time in Seconds: " + sekundensumme.toString()  +  System.getProperty("line.separator") +
+            "Time in Total: " + zeit2 +  System.getProperty("line.separator") +
+            "Average in Seconds: " + durchschnitt.toString()  +  System.getProperty("line.separator") +
+            "Average: " + zeit3 +  System.getProperty("line.separator") +
+            "Longest in Tarpit: " + zeit4 + System.getProperty("line.separator") +
+            "Shortest in Tarpit: " + sekundenshortest.toString()
     try {
         val fw = FileWriter(path + "\\" + fileName4, true)
         fw.write(text)
