@@ -1,0 +1,77 @@
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
+import java.io.InputStream
+
+val Liste1 = mutableListOf<String>()
+val Liste2 = mutableListOf<String>()
+
+val path = System.getProperty("user.dir")
+var fileName = "tarpit.log"
+var fileName2 = "log.txt"
+var fileName3 = "error.txt"
+var zaehler: Long = 0
+var message3 = " Reading Log-File."
+var message4 = " Conversion."
+var message5 = " Writing Log-File."
+var message6 = " Process finished. \r"
+
+fun main(args: Array<String>) {
+
+    println(" ")
+
+    println(message3)
+    val inputStream: InputStream = File(path + "\\" + fileName).inputStream()
+    inputStream.bufferedReader().forEachLine { Liste1.add(it) }
+
+    println(message4)
+    Liste1.forEach { datenaufbereitung(it) }
+    println(message5)
+    println(" ")
+    schreiben()
+    print(message6)
+}
+fun datenaufbereitung(zeile: String) {
+
+    if (zeile.contains(",") ) {
+
+        val wert1: String = zeile.replace(" INFO     TarpitServer: Client ('", "," )
+        val wert2: String = wert1.replace("', ", "," )
+        val wert3: String = wert2.replace(") ", "," )
+        Liste2.add(wert3)
+        zaehler = zaehler + 1
+    }
+}
+
+fun schreiben() {
+
+    var zaehler2: Long  = 0
+    Liste2.forEach { (it)
+        zaehler2 = zaehler2 + 1
+
+        val kommachar: String = ","
+        var kommaanzahl: Int = it.count { kommachar.contains(it)}
+
+        if (kommaanzahl < 3) {
+            val text = it  + System.getProperty("line.separator")
+            try {
+                val fw = FileWriter(path  + "\\" + fileName3, true)
+                fw.write(text)
+                fw.close()
+            } catch (e: IOException) {
+            }
+        }
+
+        val text = it  + System.getProperty("line.separator")
+        try {
+            val fw = FileWriter(path  + "\\" + fileName2, true)
+            fw.write(text)
+            fw.close()
+        } catch (e: IOException) {
+        }
+
+        var percentage = (zaehler2.toDouble() / zaehler.toDouble()) * 100
+        var prozent: Int = percentage.toInt()
+        print( "   " + prozent.toString() + "% \r")
+    }
+}
