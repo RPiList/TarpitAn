@@ -23,7 +23,7 @@ var fileName2 = "log.txt"
 var fileName3 = "data.txt"
 var fileName4 = "result.txt"
 var message3 = " Reading Data."
-var message5 = " Writing Data"
+var message5 = " Writing Data."
 var message6 = " Process finished. \r"
 
 fun main() {
@@ -39,7 +39,6 @@ fun main() {
         lineList.forEach { datenaufbereitung(it) }
 
         println(message5)
-        println("  ")
         analyse()
         println("  ")
         println(message6)
@@ -62,11 +61,35 @@ fun datenaufbereitung(zeile: String) {
     Liste4.add(wert4)
 }
 
+fun ipwert(ipdata: String): String {
+
+    val pos1 = ipdata.indexOf(".", 0)
+    val pos2 = ipdata.indexOf(".", ((pos1) + 1))
+    val pos3 = ipdata.indexOf(".", ((pos2) + 1))
+
+    val wert1: String = ipdata.substring(0, pos1)
+    val wert2: String = ipdata.substring(pos1 + 1, pos2)
+    val wert3: String = ipdata.substring(pos2 + 1, pos3)
+    val wert4: String = ipdata.substring(pos3 + 1)
+
+    wertNW  = wert1 + "." + wert2 + "." + wert3
+
+    val dec1: Long = wert1.toLong() * 16777216
+    val dec2: Long = wert2.toLong() * 65536
+    val dec3: Long = wert3.toLong() * 256
+    val dec4: Long = wert4.toLong() * 1
+    val superdec: Long = dec1 + dec2 + dec3 + dec4
+    val ruecktext: String = superdec.toString()
+
+    return ruecktext
+}
+
 fun analyse(){
 
     val anzahlzeilen: Int = Liste1.count() -1
 
-    //dateikopf()
+    try {
+        val fw = FileWriter(path  + "\\" + fileName3, true)
 
     for (i in 0..anzahlzeilen) {
 
@@ -114,12 +137,9 @@ fun analyse(){
                                 "," + decIP4 + "," + wertNW +
                                 "," + Liste1.elementAt(i).toString() + "," + sekunden.toString() +
                                 "," + zeit + System.getProperty("line.separator")
-                        try {
-                            val fw = FileWriter(path  + "\\" + fileName3, true)
+
                             fw.write(text)
-                            fw.close()
-                        } catch (e: IOException) {
-                        }
+
                         break
                     }
                 }
@@ -129,7 +149,12 @@ fun analyse(){
         var percentage = (i.toDouble() / anzahlzeilen.toDouble()) * 100
         var prozent: Int = percentage.toInt()
         print( "   " + prozent.toString() + "% \r")
+
     }
+
+                fw.close()
+            } catch (e: IOException) {
+            }
 
     val hours2:Long =   sekundensumme / 3600
     val minutes2:Long = (sekundensumme % 3600) / 60
@@ -158,36 +183,13 @@ fun analyse(){
             "Average: " + zeit3 +  System.getProperty("line.separator") +
             "Longest in Tarpit: " + zeit4 + System.getProperty("line.separator") +
             "Shortest in Tarpit: " + sekundenshortest.toString()
+
     try {
         val fw = FileWriter(path + "\\" + fileName4, true)
         fw.write(text)
         fw.close()
     } catch (e: IOException) {
     }
-    //dateiende()
-}
-
-fun ipwert(ipdata: String): String {
-
-    val pos1 = ipdata.indexOf(".", 0)
-    val pos2 = ipdata.indexOf(".", ((pos1) + 1))
-    val pos3 = ipdata.indexOf(".", ((pos2) + 1))
-
-    val wert1: String = ipdata.substring(0, pos1)
-    val wert2: String = ipdata.substring(pos1 + 1, pos2)
-    val wert3: String = ipdata.substring(pos2 + 1, pos3)
-    val wert4: String = ipdata.substring(pos3 + 1)
-
-    wertNW  = wert1 + "." + wert2 + "." + wert3
-
-    val dec1: Long = wert1.toLong() * 16777216
-    val dec2: Long = wert2.toLong() * 65536
-    val dec3: Long = wert3.toLong() * 256
-    val dec4: Long = wert4.toLong() * 1
-    val superdec: Long = dec1 + dec2 + dec3 + dec4
-    val ruecktext: String = superdec.toString()
-
-    return ruecktext
 }
 
 
