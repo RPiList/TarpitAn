@@ -2,7 +2,6 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.io.InputStream
-import javax.swing.JOptionPane.showMessageDialog
 
 val Liste1 = mutableListOf<String>()
 val Liste2 = mutableListOf<String>()
@@ -11,44 +10,34 @@ val Liste4 = mutableListOf<String>()
 val ListeConfig = mutableListOf<String>()
 var wertDECip: String = ""
 val path = System.getProperty("user.dir")
-var longlat = "6.68504,51.19807"
+var longlat = ""
 var fileName = "ip-locations.txt"
 var fileName2 = "data.txt"
 var fileName3 = "maps.kml"
-var fileName4 = "result.txt"
-val fileconfig = "config.txt"
 
-fun main() {
 
-    val fileconf = File(fileconfig)
-    val fileconfExists = fileconf.exists()
+fun main(args: Array<String>) {
 
-    if (fileconfExists) {
-        val inputStream99: InputStream = File(path + "\\config.txt").inputStream()
+        val inputStream99: InputStream = File(path + "\\geo.txt").inputStream()
         inputStream99.bufferedReader().forEachLine { ListeConfig.add(it) }
-        fileName = ListeConfig.elementAt(0)
-        fileName2 = ListeConfig.elementAt(1)
-        fileName3 = ListeConfig.elementAt(2)
-        fileName4 = ListeConfig.elementAt(3)
-        longlat = ListeConfig.elementAt(4)
-    }
-    else {
-        fileName = "ip-locations.txt"
-        fileName2 = "data.txt"
-        fileName3 = "maps.kml"
-        fileName4 = "result.txt"
-        longlat = "6.68504,51.19807"
-    }
+
+        longlat = ListeConfig.elementAt(0)
+
     val inputStream2: InputStream = File(path + "\\" + fileName).inputStream()
     inputStream2.bufferedReader().forEachLine { Liste1.add(it) }
 
     val inputStream: InputStream = File(path + "\\" + fileName2).inputStream()
     inputStream.bufferedReader().forEachLine { Liste2.add(it) }
 
+    println(" Preparing Data.")
     prepareDECip()
-    createKML()
 
-    showMessageDialog(null, "Fertig.")
+    println(" Writing KML File.")
+    println(" ")
+    createKML()
+    println(" ")
+    println(" Process completed.")
+    println(" ")
 }
 
 fun prepareDECip() {
@@ -64,12 +53,18 @@ fun prepareDECip() {
 
 fun createKML() {
     var decip: Double
-    var neutext: String
-    var neutextKML: String
+    val kopftext: String = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document><Style id=\"transBluePoly\"><LineStyle><width>1.5</width><color>501400E6</color></LineStyle></Style>"
+    var haupttext: String = ""
+    val endtext: String = "</Document></kml>"
 
-    dateikopf()
+var counter: Long = 0
+
+    try {
+        val fw = FileWriter(path  + "\\" + fileName3, true)
+        fw.write(kopftext)
 
     for(line in Liste4){
+        counter = counter +1
 
         decip = line.toDouble()
 
@@ -93,37 +88,71 @@ fun createKML() {
 
             if (decip >= Cwert1 && decip <= Cwert2) {
 
-                neutextKML = "<Placemark>" +
+                haupttext = "<Placemark>" +
                         "<name>" + wert6 + "</name>" + "<extrude>1</extrude>" +
                         "<tessellate>1</tessellate><styleUrl>#transBluePoly</styleUrl><LineString>" +
                         "<coordinates>" + wert8 + "," + wert7 + System.getProperty("line.separator")  + longlat + "</coordinates></LineString></Placemark>"
-                try {
-                    val fw = FileWriter(path + "\\" + fileName3, true)
-                    fw.write(neutextKML)
-                    fw.close()
-                } catch (e: IOException) {
-                }
-                break
+                fw.write(haupttext)
             }
         }
+
+        var percentage = (counter.toDouble() / Liste4.count().toDouble()) * 100
+        var prozent: Int = percentage.toInt()
+        print( "   " + prozent.toString() + "% \r")
     }
 
-    neutext = "</Document></kml>"
-    try {
-        val fw = FileWriter(path + "\\" + fileName3, true)
-        fw.write(neutext)
+        fw.write(endtext)
         fw.close()
-    } catch (e: IOException) {
-    }
+            } catch (e: IOException) {
+            }
+
 }
 
+fun createKML2() {
+    var decip: Double
+    val kopftext: String = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document><Style id=\"transBluePoly\"><LineStyle><width>1.5</width><color>501400E6</color></LineStyle></Style>"
+    var haupttext: String = ""
+    val endtext: String = "</Document></kml>"
 
-fun dateikopf() {
-    val kopftext = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document><Style id=\"transBluePoly\"><LineStyle><width>1.5</width><color>501400E6</color></LineStyle></Style>"
-    try {
-        val fw = FileWriter(path + "\\" + fileName3, true)
-        fw.write(kopftext)
-        fw.close()
-    } catch (e: IOException) {
+    var counter: Long = 0
+
+    for(line in Liste4){
+        counter = counter +1
+
+        decip = line.toDouble()
+
+        for (line in Liste1) {
+            val pos1  = line.indexOf(",",0)
+            val pos2  = line.indexOf(",",((pos1)+1))
+            val pos3  = line.indexOf(",",((pos2)+1))
+            val pos4  = line.indexOf(",",((pos3)+1))
+            val pos5  = line.indexOf(",",((pos4)+1))
+            val pos6  = line.indexOf(",",((pos5)+1))
+            val pos7  = line.indexOf(",",((pos6)+1))
+
+            val wert1: String = line.substring(0,pos1)
+            val wert2: String = line.substring(pos1+1, pos2)
+            val wert6: String = line.substring(pos5+1, pos6)
+            val wert7: String = line.substring(pos6+1, pos7)
+            val wert8: String = line.substring(pos7+1)
+
+            val Cwert1: Double = wert1.toDouble()
+            val Cwert2: Double = wert2.toDouble()
+
+            if (decip >= Cwert1 && decip <= Cwert2) {
+
+                haupttext = haupttext + "<Placemark>" +
+                        "<name>" + wert6 + "</name>" + "<extrude>1</extrude>" +
+                        "<tessellate>1</tessellate><styleUrl>#transBluePoly</styleUrl><LineString>" +
+                        "<coordinates>" + wert8 + "," + wert7 + System.getProperty("line.separator")  + longlat + "</coordinates></LineString></Placemark>"
+            }
+        }
+
+        var percentage = (counter.toDouble() / Liste4.count().toDouble()) * 100
+        var prozent: Int = percentage.toInt()
+        print( "   " + prozent.toString() + "% \r")
     }
+
+
+
 }
