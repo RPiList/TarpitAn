@@ -30,10 +30,10 @@ fun main() {
 
 
     println(message3)
-        val inputStream2: InputStream = File(path + "\\" + fileName).inputStream()
+        val inputStream2: InputStream = File(path + File.separator + fileName).inputStream()
         inputStream2.bufferedReader().forEachLine { Liste5.add(it) }
 
-        val inputStream: InputStream = File(path + "\\" + fileName2).inputStream()
+        val inputStream: InputStream = File(path + File.separator + fileName2).inputStream()
 
         inputStream.bufferedReader().forEachLine { lineList.add(it) }
         lineList.forEach { datenaufbereitung(it) }
@@ -89,7 +89,7 @@ fun analyse(){
     val anzahlzeilen: Int = Liste1.count() -1
 
     try {
-        val fw = FileWriter(path  + "\\" + fileName3, true)
+        val fw = FileWriter(path  + File.separator + fileName3, true)
 
     for (i in 0..anzahlzeilen) {
 
@@ -185,7 +185,7 @@ fun analyse(){
             "Shortest in Tarpit: " + sekundenshortest.toString()
 
     try {
-        val fw = FileWriter(path + "\\" + fileName4, true)
+        val fw = FileWriter(path + File.separator + fileName4, true)
         fw.write(text)
         fw.close()
     } catch (e: IOException) {

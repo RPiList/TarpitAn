@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
     println(" ")
 
     println(message3)
-    val inputStream: InputStream = File(path + "\\" + fileName).inputStream()
+    val inputStream: InputStream = File(path + File.separator + fileName).inputStream()
     inputStream.bufferedReader().forEachLine { Liste1.add(it) }
 
     println(message4)
@@ -47,7 +47,7 @@ fun datenaufbereitung(zeile: String) {
 fun schreiben() {
 
     try {
-        val fw = FileWriter(path  + "\\" + fileName2, true)
+        val fw = FileWriter(path  + File.separator + fileName2, true)
 
     var zaehler2: Long  = 0
     Liste2.forEach { (it)
