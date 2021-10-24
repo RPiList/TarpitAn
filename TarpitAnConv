@@ -26,15 +26,16 @@ fun main(args: Array<String>) {
 
     println(message4)
     Liste1.forEach { datenaufbereitung(it) }
-    println(message5)
+
+    print(message5)
     println(" ")
     schreiben()
+    println(" ")
     print(message6)
 }
 fun datenaufbereitung(zeile: String) {
 
     if (zeile.contains(",") ) {
-
         val wert1: String = zeile.replace(" INFO     TarpitServer: Client ('", "," )
         val wert2: String = wert1.replace("', ", "," )
         val wert3: String = wert2.replace(") ", "," )
@@ -45,33 +46,21 @@ fun datenaufbereitung(zeile: String) {
 
 fun schreiben() {
 
+    try {
+        val fw = FileWriter(path  + "\\" + fileName2, true)
+
     var zaehler2: Long  = 0
     Liste2.forEach { (it)
         zaehler2 = zaehler2 + 1
 
-        val kommachar: String = ","
-        var kommaanzahl: Int = it.count { kommachar.contains(it)}
-
-        if (kommaanzahl < 3) {
-            val text = it  + System.getProperty("line.separator")
-            try {
-                val fw = FileWriter(path  + "\\" + fileName3, true)
-                fw.write(text)
-                fw.close()
-            } catch (e: IOException) {
-            }
-        }
-
         val text = it  + System.getProperty("line.separator")
-        try {
-            val fw = FileWriter(path  + "\\" + fileName2, true)
             fw.write(text)
-            fw.close()
-        } catch (e: IOException) {
-        }
 
         var percentage = (zaehler2.toDouble() / zaehler.toDouble()) * 100
         var prozent: Int = percentage.toInt()
         print( "   " + prozent.toString() + "% \r")
-    }
+        }
+                fw.close()
+            } catch (e: IOException) {
+            }
 }
