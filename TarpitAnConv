@@ -7,7 +7,6 @@ val Liste1 = mutableListOf<String>()
 val Liste2 = mutableListOf<String>()
 
 val path = System.getProperty("user.dir")
-//val path = "c:\\users\\sempervideo\\desktop"
 var fileName = "tarpit.log"
 var fileName2 = "log.txt"
 var fileName3 = "error.txt"
