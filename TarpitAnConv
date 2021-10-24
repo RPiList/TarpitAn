@@ -7,6 +7,7 @@ val Liste1 = mutableListOf<String>()
 val Liste2 = mutableListOf<String>()
 
 val path = System.getProperty("user.dir")
+//val path = "c:\\users\\sempervideo\\desktop"
 var fileName = "tarpit.log"
 var fileName2 = "log.txt"
 var fileName3 = "error.txt"
@@ -21,7 +22,7 @@ fun main(args: Array<String>) {
     println(" ")
 
     println(message3)
-    val inputStream: InputStream = File(path + "\\" + fileName).inputStream()
+    val inputStream: InputStream = File(path + File.separator + fileName).inputStream()
     inputStream.bufferedReader().forEachLine { Liste1.add(it) }
 
     println(message4)
@@ -36,6 +37,7 @@ fun main(args: Array<String>) {
 fun datenaufbereitung(zeile: String) {
 
     if (zeile.contains(",") ) {
+
         val wert1: String = zeile.replace(" INFO     TarpitServer: Client ('", "," )
         val wert2: String = wert1.replace("', ", "," )
         val wert3: String = wert2.replace(") ", "," )
@@ -47,7 +49,7 @@ fun datenaufbereitung(zeile: String) {
 fun schreiben() {
 
     try {
-        val fw = FileWriter(path  + "\\" + fileName2, true)
+        val fw = FileWriter(path  + File.separator + fileName2, true)
 
     var zaehler2: Long  = 0
     Liste2.forEach { (it)
