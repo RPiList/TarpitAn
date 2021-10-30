@@ -23,13 +23,15 @@ about the date time format.
 to get a CSV formatted file, which can be further analysed in a spreadsheet.
 Additionally you get a result.txt with a few summeries.
 
-![mymaps](https://user-images.githubusercontent.com/56664851/139542602-e8eadd7a-b6e5-4d37-b552-da25faddd7f6.png)
+![result](https://user-images.githubusercontent.com/56664851/139543137-31f28414-34ae-441f-bda0-0f6fa2947bfa.png)
 
 4. Step: Start java -jar tarpitangeo.jar
 
 to get a Google Maps .kml file, to get a graphical presentation of each attacker. 
 You can write your own geo-coordinates to geo.txt to adjust the attacked geo-coords 
 to your actual location.
+
+![mymaps](https://user-images.githubusercontent.com/56664851/139542602-e8eadd7a-b6e5-4d37-b552-da25faddd7f6.png)
 
 5. Step: Start java -jar tarpitancc.jar
 
