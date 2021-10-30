@@ -20,7 +20,6 @@ fun main(args: Array<String>) {
 
         val inputStream99: InputStream = File(path + File.separator + "geo.txt").inputStream()
         inputStream99.bufferedReader().forEachLine { ListeConfig.add(it) }
-
         longlat = ListeConfig.elementAt(0)
 
     val inputStream2: InputStream = File(path +File.separator + fileName).inputStream()
@@ -38,7 +37,6 @@ fun main(args: Array<String>) {
     println(" ")
     println(" Process completed.")
     println(" ")
-
 }
 
 fun prepareDECip() {
@@ -95,6 +93,7 @@ var counter: Long = 0
                         "<tessellate>1</tessellate><styleUrl>#transBluePoly</styleUrl><LineString>" +
                         "<coordinates>" + wert8 + "," + wert7 + System.getProperty("line.separator")  + longlat + "</coordinates></LineString></Placemark>"
                 fw.write(haupttext)
+            break
             }
         }
 
