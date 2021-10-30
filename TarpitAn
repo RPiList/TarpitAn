@@ -18,6 +18,7 @@ var sekundenlongest:Long = 0
 var sekundenshortest:Long = 9999999
 var wertNW: String = ""
 val path = System.getProperty("user.dir")
+//val path = "c:\\users\\sempervideo\\desktop"
 var fileName = "ip-locations.txt"
 var fileName2 = "log.txt"
 var fileName3 = "data.txt"
@@ -26,7 +27,9 @@ var message3 = " Reading Data."
 var message5 = " Writing Data."
 var message6 = " Process finished. \r"
 
+
 fun main() {
+
 
     println(message3)
         val inputStream2: InputStream = File(path + File.separator + fileName).inputStream()
@@ -182,6 +185,7 @@ fun analyse(){
             "Average: " + zeit3 +  System.getProperty("line.separator") +
             "Longest in Tarpit: " + zeit4 + System.getProperty("line.separator") +
             "Shortest in Tarpit: " + sekundenshortest.toString()
+
     try {
         val fw = FileWriter(path + File.separator + fileName4, true)
         fw.write(text)
