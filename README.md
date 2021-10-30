@@ -6,6 +6,9 @@ This is just a collection of a few tools to analyse your Tarpit Logfile.
 When you have your Tarpit (see https://pypi.org/project/ssh-tarpit/) up and running 
 you can instruct Tarpit to write a log file.
 
+If you just started and don't have a log file yet, you could download my demo-data
+and play with it first: https://github.com/RPiList/TarpitAn/releases
+
 Copy your log file to the same directory, where the TarpitAn files already are. 
 1. Step: Rename your log file to log.txt (It will not work otherwise).
 2. Step: Start java -jar tarpitconv.jar in your CMD or Terminal.
