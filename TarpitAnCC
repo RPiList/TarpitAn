@@ -1,0 +1,120 @@
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
+import java.io.InputStream
+
+val Liste1 = mutableListOf<String>()
+val Liste2 = mutableListOf<String>()
+val Liste3 = mutableListOf<String>()
+val Liste4 = mutableListOf<String>()
+val Liste5 = mutableListOf<String>()
+val Liste6 = mutableListOf<String>()
+
+var wertDECip: String = ""
+var wertIP: String = ""
+val path = System.getProperty("user.dir")
+var fileName = "ip-locations.txt"
+var fileName2 = "data.txt"
+var fileName3 = "cc.txt"
+
+var zeitstart: Long = 0
+var zeitend: Long  = 0
+
+fun main(args: Array<String>) {
+
+    val inputStream2: InputStream = File(path +File.separator + fileName).inputStream()
+    inputStream2.bufferedReader().forEachLine { Liste1.add(it) }
+
+    val inputStream: InputStream = File(path + File.separator + fileName2).inputStream()
+    inputStream.bufferedReader().forEachLine { Liste2.add(it) }
+
+    println(" Preparing Data.")
+    prepareDECip()
+
+    println(" Writing Country Code File.")
+
+    createCC()
+
+    println(" ")
+    println(" Process completed.")
+    println(" ")
+}
+
+fun prepareDECip() {
+    for (line in Liste2) {
+        val pos1  = line.indexOf(",",0)
+        val pos2  = line.indexOf(",",((pos1)+1))
+        val pos3  = line.indexOf(",",((pos2)+1))
+        wertIP = line.substring(pos1+1, pos2)
+        wertDECip = line.substring(pos2+1, pos3)
+        Liste3.add(wertDECip)
+        Liste4.add(wertIP)
+    }
+}
+
+fun createCC() {
+    var decip: Double
+    var haupttext: String = ""
+    var counter: Long = 0
+    var zaehler: Int = 0
+
+    try {
+        val fw = FileWriter(path  + File.separator + fileName3, true)
+
+        for(line in Liste3){
+            counter = counter +1
+            decip = line.toDouble()
+            wertIP = Liste4.elementAt(Liste3.indexOf(line))
+
+//            for(line in Liste5){
+//                if (wertIP == line) {
+                //    // zeile schon vorhanden
+//                    zaehler = zaehler + 1
+//                    haupttext = zaehler.toString() + "," + Liste6.elementAt(Liste5.indexOf(line)) + System.getProperty("line.separator")
+//                    fw.write(haupttext)
+//                    break
+//               }
+//            }
+                for (line in Liste1) {
+                val pos1  = line.indexOf(",",0)
+                val pos2  = line.indexOf(",",((pos1)+1))
+                val pos3  = line.indexOf(",",((pos2)+1))
+                val pos4  = line.indexOf(",",((pos3)+1))
+                val pos5  = line.indexOf(",",((pos4)+1))
+                val pos6  = line.indexOf(",",((pos5)+1))
+                val pos7  = line.indexOf(",",((pos6)+1))
+
+                val wert1: String = line.substring(0,pos1)
+                val wert2: String = line.substring(pos1+1, pos2)
+                val wert3: String = line.substring(pos2+1, pos3)
+                val wert4: String = line.substring(pos3+1, pos4)
+                val wert5: String = line.substring(pos4+1, pos5)
+                val wert6: String = line.substring(pos5+1, pos6)
+
+                val Cwert1: Double = wert1.toDouble()
+                val Cwert2: Double = wert2.toDouble()
+
+                if (decip >= Cwert1 && decip <= Cwert2) {
+
+                    zaehler = zaehler + 1
+
+                    haupttext = zaehler.toString() + "," +  wertIP + "," +  wert4  + "," +  wert5  + "," +  wert6 + System.getProperty("line.separator")
+
+                    Liste5.add (wertIP)
+                    Liste6.add(wertIP + "," +  wert4  + "," +  wert5  + "," +  wert6)
+                    fw.write(haupttext)
+                    break
+                }
+            //}
+
+            }
+            var percentage = (counter.toDouble() / Liste4.count().toDouble()) * 100
+            var prozent: Int = percentage.toInt()
+            print( "   " + prozent.toString() + "% \r")
+        }
+
+        fw.close()
+    } catch (e: IOException) {
+    }
+
+}
