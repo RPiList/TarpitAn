@@ -32,6 +32,8 @@ to your actual location.
 
 to get a different CSV formatted file to create Google Spreadsheet Heatmaps.
 
+![chart](https://user-images.githubusercontent.com/56664851/139542918-e412f305-1ff9-4cf2-92c5-3214a614f7ff.png)
+
 6. That's it.
 
 
