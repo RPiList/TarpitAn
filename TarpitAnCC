@@ -18,11 +18,11 @@ var fileName2 = "data.txt"
 var fileName3 = "cc.txt"
 
 var zeitstart: Long = 0
-var zeitend: Long  = 0
+var zeitend: Long = 0
 
 fun main(args: Array<String>) {
 
-    val inputStream2: InputStream = File(path +File.separator + fileName).inputStream()
+    val inputStream2: InputStream = File(path + File.separator + fileName).inputStream()
     inputStream2.bufferedReader().forEachLine { Liste1.add(it) }
 
     val inputStream: InputStream = File(path + File.separator + fileName2).inputStream()
@@ -42,11 +42,11 @@ fun main(args: Array<String>) {
 
 fun prepareDECip() {
     for (line in Liste2) {
-        val pos1  = line.indexOf(",",0)
-        val pos2  = line.indexOf(",",((pos1)+1))
-        val pos3  = line.indexOf(",",((pos2)+1))
-        wertIP = line.substring(pos1+1, pos2)
-        wertDECip = line.substring(pos2+1, pos3)
+        val pos1 = line.indexOf(",", 0)
+        val pos2 = line.indexOf(",", ((pos1) + 1))
+        val pos3 = line.indexOf(",", ((pos2) + 1))
+        wertIP = line.substring(pos1 + 1, pos2)
+        wertDECip = line.substring(pos2 + 1, pos3)
         Liste3.add(wertDECip)
         Liste4.add(wertIP)
     }
@@ -59,37 +59,37 @@ fun createCC() {
     var zaehler: Int = 0
 
     try {
-        val fw = FileWriter(path  + File.separator + fileName3, true)
+        val fw = FileWriter(path + File.separator + fileName3, true)
 
-        for(line in Liste3){
-            counter = counter +1
+        for (line in Liste3) {
+            counter = counter + 1
             decip = line.toDouble()
             wertIP = Liste4.elementAt(Liste3.indexOf(line))
 
 //            for(line in Liste5){
 //                if (wertIP == line) {
-                //    // zeile schon vorhanden
+            //    // zeile schon vorhanden
 //                    zaehler = zaehler + 1
 //                    haupttext = zaehler.toString() + "," + Liste6.elementAt(Liste5.indexOf(line)) + System.getProperty("line.separator")
 //                    fw.write(haupttext)
 //                    break
 //               }
 //            }
-                for (line in Liste1) {
-                val pos1  = line.indexOf(",",0)
-                val pos2  = line.indexOf(",",((pos1)+1))
-                val pos3  = line.indexOf(",",((pos2)+1))
-                val pos4  = line.indexOf(",",((pos3)+1))
-                val pos5  = line.indexOf(",",((pos4)+1))
-                val pos6  = line.indexOf(",",((pos5)+1))
-                val pos7  = line.indexOf(",",((pos6)+1))
+            for (line in Liste1) {
+                val pos1 = line.indexOf(",", 0)
+                val pos2 = line.indexOf(",", ((pos1) + 1))
+                val pos3 = line.indexOf(",", ((pos2) + 1))
+                val pos4 = line.indexOf(",", ((pos3) + 1))
+                val pos5 = line.indexOf(",", ((pos4) + 1))
+                val pos6 = line.indexOf(",", ((pos5) + 1))
+                val pos7 = line.indexOf(",", ((pos6) + 1))
 
-                val wert1: String = line.substring(0,pos1)
-                val wert2: String = line.substring(pos1+1, pos2)
-                val wert3: String = line.substring(pos2+1, pos3)
-                val wert4: String = line.substring(pos3+1, pos4)
-                val wert5: String = line.substring(pos4+1, pos5)
-                val wert6: String = line.substring(pos5+1, pos6)
+                val wert1: String = line.substring(0, pos1)
+                val wert2: String = line.substring(pos1 + 1, pos2)
+                val wert3: String = line.substring(pos2 + 1, pos3)
+                val wert4: String = line.substring(pos3 + 1, pos4)
+                val wert5: String = line.substring(pos4 + 1, pos5)
+                val wert6: String = line.substring(pos5 + 1, pos6)
 
                 val Cwert1: Double = wert1.toDouble()
                 val Cwert2: Double = wert2.toDouble()
@@ -98,19 +98,19 @@ fun createCC() {
 
                     zaehler = zaehler + 1
 
-                    haupttext = zaehler.toString() + "," +  wertIP + "," +  wert4  + "," +  wert5  + "," +  wert6 + System.getProperty("line.separator")
+                    haupttext = "$zaehler, $wertIP, $wert4, $wert5, $wert6" + System.getProperty("line.separator")
 
-                    Liste5.add (wertIP)
-                    Liste6.add(wertIP + "," +  wert4  + "," +  wert5  + "," +  wert6)
+                    Liste5.add(wertIP)
+                    Liste6.add("$wertIP, $wert4, $wert5, $wert6")
                     fw.write(haupttext)
                     break
                 }
-            //}
+                //}
 
             }
             var percentage = (counter.toDouble() / Liste4.count().toDouble()) * 100
             var prozent: Int = percentage.toInt()
-            print( "   " + prozent.toString() + "% \r")
+            print("   $prozent% \r")
         }
 
         fw.close()

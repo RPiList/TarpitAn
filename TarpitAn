@@ -11,11 +11,11 @@ val Liste2 = mutableListOf<String>()
 val Liste3 = mutableListOf<String>()
 val Liste4 = mutableListOf<String>()
 val Liste5 = mutableListOf<String>()
-var zaehler:Long = 0
-var zaehler2:Long = 0
-var sekundensumme:Long = 0
-var sekundenlongest:Long = 0
-var sekundenshortest:Long = 9999999
+var zaehler: Long = 0
+var zaehler2: Long = 0
+var sekundensumme: Long = 0
+var sekundenlongest: Long = 0
+var sekundenshortest: Long = 9999999
 var wertNW: String = ""
 val path = System.getProperty("user.dir")
 var fileName = "ip-locations.txt"
@@ -28,18 +28,18 @@ var message6 = " Process finished. \r"
 
 fun main() {
     println(message3)
-        val inputStream2: InputStream = File(path + File.separator + fileName).inputStream()
-        inputStream2.bufferedReader().forEachLine { Liste5.add(it) }
+    val inputStream2: InputStream = File(path + File.separator + fileName).inputStream()
+    inputStream2.bufferedReader().forEachLine { Liste5.add(it) }
 
-        val inputStream: InputStream = File(path + File.separator + fileName2).inputStream()
+    val inputStream: InputStream = File(path + File.separator + fileName2).inputStream()
 
-        inputStream.bufferedReader().forEachLine { lineList.add(it) }
-        lineList.forEach { datenaufbereitung(it) }
+    inputStream.bufferedReader().forEachLine { lineList.add(it) }
+    lineList.forEach { datenaufbereitung(it) }
 
-        println(message5)
-        analyse()
-        println("  ")
-        println(message6)
+    println(message5)
+    analyse()
+    println("  ")
+    println(message6)
 }
 
 fun datenaufbereitung(zeile: String) {
@@ -51,7 +51,7 @@ fun datenaufbereitung(zeile: String) {
     val wert1: String = zeile.substring(0, pos1)
     val wert2: String = zeile.substring(pos1 + 1, pos2)
     val wert3: String = zeile.substring(pos2 + 1, pos3)
-    val wert4: String = zeile.substring(pos3+1)
+    val wert4: String = zeile.substring(pos3 + 1)
 
     Liste1.add(wert1)
     Liste2.add(wert2)
@@ -70,7 +70,7 @@ fun ipwert(ipdata: String): String {
     val wert3: String = ipdata.substring(pos2 + 1, pos3)
     val wert4: String = ipdata.substring(pos3 + 1)
 
-    wertNW  = wert1 + "." + wert2 + "." + wert3
+    wertNW = wert1 + "." + wert2 + "." + wert3
 
     val dec1: Long = wert1.toLong() * 16777216
     val dec2: Long = wert2.toLong() * 65536
@@ -82,110 +82,116 @@ fun ipwert(ipdata: String): String {
     return ruecktext
 }
 
-fun analyse(){
+fun analyse() {
 
-    val anzahlzeilen: Int = Liste1.count() -1
+    val anzahlzeilen: Int = Liste1.count() - 1
 
     try {
-        val fw = FileWriter(path  + File.separator + fileName3, true)
+        val fw = FileWriter(path + File.separator + fileName3, true)
 
-    for (i in 0..anzahlzeilen) {
+        for (i in 0..anzahlzeilen) {
 
+            if (Liste4[i] == "connected") {
 
-        if (Liste4.elementAt(i).toString() == "connected" ) {
+                zaehler2 = zaehler2 + 1
+                var y: Int = i
 
-            zaehler2 = zaehler2 + 1
-            var y: Int = i
+                for (y in i..anzahlzeilen) {
+                    if (Liste4[y] == "disconnected") {
+                        val WertIP1: String = Liste2.elementAt(i).toString()
+                        val WertIP2: String = Liste2.elementAt(y).toString()
+                        val WertPort1: String = Liste3.elementAt(i).toString()
+                        val WertPort2: String = Liste3.elementAt(y).toString()
 
-            for (y in i..anzahlzeilen){
-                if (Liste4.elementAt(y).toString() == "disconnected"){
-                    val WertIP1: String = Liste2.elementAt(i).toString()
-                    val WertIP2: String = Liste2.elementAt(y).toString()
-                    val WertPort1: String = Liste3.elementAt(i).toString()
-                    val WertPort2: String = Liste3.elementAt(y).toString()
+                        if (WertIP1 == WertIP2 && WertPort1 == WertPort2) {
+                            //Treffer
+                            val zeitstempel1: String = Liste1.elementAt(i).toString()
+                            val zeitstempel2: String = Liste1.elementAt(y).toString()
+                            val zeitstempel11: String = zeitstempel1.replace(" ", "T")
+                            val zeitstempel22: String = zeitstempel2.replace(" ", "T")
 
-                    if(WertIP1 == WertIP2 && WertPort1 == WertPort2) {
-                        //Treffer
-                        val zeitstempel1: String = Liste1.elementAt(i).toString()
-                        val zeitstempel2: String = Liste1.elementAt(y).toString()
-                        val zeitstempel11: String = zeitstempel1.replace(" ","T")
-                        val zeitstempel22: String = zeitstempel2.replace(" ","T")
+                            val localDateTime = LocalDateTime.parse(zeitstempel11)
+                            val localDateTime2 = LocalDateTime.parse(zeitstempel22)
 
-                        val localDateTime = LocalDateTime.parse(zeitstempel11)
-                        val localDateTime2 = LocalDateTime.parse(zeitstempel22)
+                            val sekunden: Long = localDateTime.until(localDateTime2, ChronoUnit.SECONDS)
 
-                        val sekunden: Long = localDateTime.until(localDateTime2, ChronoUnit.SECONDS)
+                            if (sekunden > sekundenlongest) {
+                                sekundenlongest = sekunden
+                            }
+                            if (sekunden < sekundenshortest) {
+                                sekundenshortest = sekunden
+                            }
 
-                        if (sekunden > sekundenlongest) { sekundenlongest = sekunden}
-                        if (sekunden < sekundenshortest) { sekundenshortest = sekunden}
+                            sekundensumme = sekundensumme + sekunden
 
-                        sekundensumme =  sekundensumme + sekunden
+                            val hours: Long = sekunden / 3600
+                            val minutes: Long = (sekunden % 3600) / 60
+                            val seconds: Long = sekunden % 60
 
-                        val hours:Long =   sekunden / 3600
-                        val minutes:Long = (sekunden % 3600) / 60
-                        val seconds:Long = sekunden % 60
+                            val zeit: String = String.format("%02d", hours) + ":" + String.format("%02d", minutes) +
+                                    ":" + String.format("%02d", seconds)
 
-                        val zeit: String = String.format("%02d", hours) + ":" + String.format("%02d", minutes)  + ":" + String.format("%02d", seconds)
+                            zaehler = zaehler + 1
 
-                        zaehler = zaehler + 1
-
-                        val decIP4 = ipwert(Liste2.elementAt(i).toString())
-
-                        val text =  zaehler.toString() + "," + Liste2.elementAt(i).toString() +
-                                "," + decIP4 + "," + wertNW +
-                                "," + Liste1.elementAt(i).toString() + "," + sekunden.toString() +
-                                "," + zeit + System.getProperty("line.separator")
+                            val decIP4 = ipwert(Liste2.elementAt(i).toString())
+                            val text = "$zaehler, ${Liste2[i]}, $decIP4, $wertNW, ${Liste1[i]}, $sekunden, $zeit" +
+                                    System.getProperty("line.separator")
 
                             fw.write(text)
 
-                        break
+                            break
+                        }
                     }
                 }
             }
+
+            var percentage = (i.toDouble() / anzahlzeilen.toDouble()) * 100
+            var prozent: Int = percentage.toInt()
+            print("   $prozent% \r")
+
         }
 
-        var percentage = (i.toDouble() / anzahlzeilen.toDouble()) * 100
-        var prozent: Int = percentage.toInt()
-        print( "   " + prozent.toString() + "% \r")
-
+        fw.close()
+    } catch (e: IOException) {
     }
 
-                fw.close()
-            } catch (e: IOException) {
-            }
-
-    val hours2:Long =   sekundensumme / 3600
-    val minutes2:Long = (sekundensumme % 3600) / 60
-    val seconds2:Long = sekundensumme % 60
-    val zeit2: String = String.format("%02d", hours2) + ":" + String.format("%02d", minutes2)  + ":" + String.format("%02d", seconds2)
+    val hours2: Long = sekundensumme / 3600
+    val minutes2: Long = (sekundensumme % 3600) / 60
+    val seconds2: Long = sekundensumme % 60
+    val zeit2: String =
+        String.format("%02d", hours2) + ":" + String.format("%02d", minutes2) + ":" + String.format("%02d", seconds2)
     val durchschnitt: Long = sekundensumme / zaehler
 
-    val hours3:Long =   durchschnitt / 3600
-    val minutes3:Long = (durchschnitt % 3600) / 60
-    val seconds3:Long = durchschnitt % 60
-    val zeit3: String = String.format("%02d", hours3) + ":" + String.format("%02d", minutes3)  + ":" + String.format("%02d", seconds3)
+    val hours3: Long = durchschnitt / 3600
+    val minutes3: Long = (durchschnitt % 3600) / 60
+    val seconds3: Long = durchschnitt % 60
+    val zeit3: String =
+        String.format("%02d", hours3) + ":" + String.format("%02d", minutes3) + ":" + String.format("%02d", seconds3)
 
-    val hours4:Long =   sekundenlongest / 3600
-    val minutes4:Long = (sekundenlongest % 3600) / 60
-    val seconds4:Long = sekundenlongest % 60
-    val zeit4: String = String.format("%02d", hours4) + ":" + String.format("%02d", minutes4)  + ":" + String.format("%02d", seconds4)
+    val hours4: Long = sekundenlongest / 3600
+    val minutes4: Long = (sekundenlongest % 3600) / 60
+    val seconds4: Long = sekundenlongest % 60
+    val zeit4: String =
+        String.format("%02d", hours4) + ":" + String.format("%02d", minutes4) + ":" + String.format("%02d", seconds4)
 
-    String
-    val stuckinpit:Long = zaehler2 - zaehler
-    val text =  "Connected: " + zaehler2.toString() +  System.getProperty("line.separator") +
-            "Disconnected: " + zaehler.toString() +  System.getProperty("line.separator") +
-            "Stuck in Tarpit: " + stuckinpit.toString() +  System.getProperty("line.separator") +
-            "Time in Seconds: " + sekundensumme.toString()  +  System.getProperty("line.separator") +
-            "Time in Total: " + zeit2 +  System.getProperty("line.separator") +
-            "Average in Seconds: " + durchschnitt.toString()  +  System.getProperty("line.separator") +
-            "Average: " + zeit3 +  System.getProperty("line.separator") +
-            "Longest in Tarpit: " + zeit4 + System.getProperty("line.separator") +
-            "Shortest in Tarpit: " + sekundenshortest.toString()
+    val stuckinpit: Long = zaehler2 - zaehler
+    val text = """
+        Connected: $zaehler2
+        Disconnected: $zaehler
+        Stuck in Tarpit: $stuckinpit
+        Time in Seconds: $sekundensumme
+        Time in Total: $zeit2
+        Average in Seconds: $durchschnitt
+        Average: $zeit3
+        Longest in Tarpit: $zeit4
+        Shortest in Tarpit: $sekundenshortest
+    """.trimIndent()
 
     try {
-        val fw = FileWriter(path + File.separator + fileName4, true)
-        fw.write(text)
-        fw.close()
+        FileWriter(path + File.separator + fileName4, true).use { writer ->
+            writer.write(text)
+            writer.appendLine()
+        }
     } catch (e: IOException) {
     }
 }

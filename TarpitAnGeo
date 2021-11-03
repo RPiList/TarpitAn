@@ -18,11 +18,11 @@ var fileName3 = "maps.kml"
 
 fun main(args: Array<String>) {
 
-        val inputStream99: InputStream = File(path + File.separator + "geo.txt").inputStream()
-        inputStream99.bufferedReader().forEachLine { ListeConfig.add(it) }
-        longlat = ListeConfig.elementAt(0)
+    val inputStream99: InputStream = File(path + File.separator + "geo.txt").inputStream()
+    inputStream99.bufferedReader().forEachLine { ListeConfig.add(it) }
+    longlat = ListeConfig.elementAt(0)
 
-    val inputStream2: InputStream = File(path +File.separator + fileName).inputStream()
+    val inputStream2: InputStream = File(path + File.separator + fileName).inputStream()
     inputStream2.bufferedReader().forEachLine { Liste1.add(it) }
 
     val inputStream: InputStream = File(path + File.separator + fileName2).inputStream()
@@ -41,10 +41,10 @@ fun main(args: Array<String>) {
 
 fun prepareDECip() {
     for (line in Liste2) {
-        val pos1  = line.indexOf(",",0)
-        val pos2  = line.indexOf(",",((pos1)+1))
-        val pos3  = line.indexOf(",",((pos2)+1))
-        wertDECip = line.substring(pos2+1, pos3)
+        val pos1 = line.indexOf(",", 0)
+        val pos2 = line.indexOf(",", ((pos1) + 1))
+        val pos3 = line.indexOf(",", ((pos2) + 1))
+        wertDECip = line.substring(pos2 + 1, pos3)
         Liste3.add(wertDECip)
     }
     Liste4.addAll(Liste3.distinct())
@@ -52,59 +52,77 @@ fun prepareDECip() {
 
 fun createKML() {
     var decip: Double
-    val kopftext: String = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document><Style id=\"transBluePoly\"><LineStyle><width>1.5</width><color>501400E6</color></LineStyle></Style>"
+    val kopftext: String = """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <kml xmlns="http://www.opengis.net/kml/2.2">
+        <Document>
+        <Style id="transBluePoly">
+            <LineStyle>
+                <width>1.5</width>
+                <color>501400E6</color>
+            </LineStyle>
+        </Style>
+    """.trimIndent()
+
     var haupttext: String = ""
     val endtext: String = "</Document></kml>"
 
-var counter: Long = 0
+    var counter: Long = 0
 
     try {
-        val fw = FileWriter(path  + File.separator + fileName3, true)
+        val fw = FileWriter(path + File.separator + fileName3, true)
         fw.write(kopftext)
 
-    for(line in Liste4){
-        counter = counter +1
+        for (line in Liste4) {
+            counter = counter + 1
 
-        decip = line.toDouble()
+            decip = line.toDouble()
 
-        for (line in Liste1) {
-            val pos1  = line.indexOf(",",0)
-            val pos2  = line.indexOf(",",((pos1)+1))
-            val pos3  = line.indexOf(",",((pos2)+1))
-            val pos4  = line.indexOf(",",((pos3)+1))
-            val pos5  = line.indexOf(",",((pos4)+1))
-            val pos6  = line.indexOf(",",((pos5)+1))
-            val pos7  = line.indexOf(",",((pos6)+1))
+            for (line in Liste1) {
+                val pos1 = line.indexOf(",", 0)
+                val pos2 = line.indexOf(",", ((pos1) + 1))
+                val pos3 = line.indexOf(",", ((pos2) + 1))
+                val pos4 = line.indexOf(",", ((pos3) + 1))
+                val pos5 = line.indexOf(",", ((pos4) + 1))
+                val pos6 = line.indexOf(",", ((pos5) + 1))
+                val pos7 = line.indexOf(",", ((pos6) + 1))
 
-            val wert1: String = line.substring(0,pos1)
-            val wert2: String = line.substring(pos1+1, pos2)
-            val wert6: String = line.substring(pos5+1, pos6)
-            val wert7: String = line.substring(pos6+1, pos7)
-            val wert8: String = line.substring(pos7+1)
+                val wert1: String = line.substring(0, pos1)
+                val wert2: String = line.substring(pos1 + 1, pos2)
+                val wert6: String = line.substring(pos5 + 1, pos6)
+                val wert7: String = line.substring(pos6 + 1, pos7)
+                val wert8: String = line.substring(pos7 + 1)
 
-            val Cwert1: Double = wert1.toDouble()
-            val Cwert2: Double = wert2.toDouble()
+                val Cwert1: Double = wert1.toDouble()
+                val Cwert2: Double = wert2.toDouble()
 
 
-            if (decip >= Cwert1 && decip <= Cwert2) {
+                if (decip >= Cwert1 && decip <= Cwert2) {
+                    haupttext = """
+                        <Placemark>
+                            <name>$wert6</name>
+                            <extrude>1</extrude>
+                            <tessellate>1</tessellate>
+                            <styleUrl>#transBluePoly</styleUrl>
+                            <LineString>
+                                <coordinates>$wert8,$wert7,$longlat</coordinates>
+                            </LineString>
+                        </Placemark>   
+                    """.trimIndent()
 
-                haupttext = "<Placemark>" +
-                        "<name>" + wert6 + "</name>" + "<extrude>1</extrude>" +
-                        "<tessellate>1</tessellate><styleUrl>#transBluePoly</styleUrl><LineString>" +
-                        "<coordinates>" + wert8 + "," + wert7 + System.getProperty("line.separator")  + longlat + "</coordinates></LineString></Placemark>"
-                fw.write(haupttext)
-            break
+                    fw.write(haupttext)
+                    break
+                }
             }
-        }
 
-        var percentage = (counter.toDouble() / Liste4.count().toDouble()) * 100
-        var prozent: Int = percentage.toInt()
-        print( "   " + prozent.toString() + "% \r")
-    }
+            var percentage = (counter.toDouble() / Liste4.count().toDouble()) * 100
+            var prozent: Int = percentage.toInt()
+            print("   $prozent% \r")
+        }
 
         fw.write(endtext)
         fw.close()
-            } catch (e: IOException) {
-            }
+    } catch (e: IOException) {
+    }
 
 }

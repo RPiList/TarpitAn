@@ -19,8 +19,8 @@ var message6 = " Process finished. \r"
 var datumanfang = ""
 var datumende = ""
 var teilweise = ""
-fun main(args: Array<String>) {
 
+fun main(args: Array<String>) {
     println(" ")
     val fileExists = File(fileNameConfig).exists()
     if (fileExists) {
@@ -44,9 +44,10 @@ fun main(args: Array<String>) {
     println(" ")
     print(message6)
 }
+
 fun datenaufbereitung(zeile: String) {
 
-    if (zeile.contains("connected") ) {
+    if (zeile.contains("connected")) {
         val wert1: String = zeile.replace(" INFO     TarpitServer: Client ('", ",")
         val wert2: String = wert1.replace("', ", ",")
         val wert3: String = wert2.replace(") ", ",")
@@ -54,10 +55,10 @@ fun datenaufbereitung(zeile: String) {
         if (teilweise == "1") {
             val pos1 = wert3.indexOf(",", 0)
             val wert4: String = wert3.substring(0, pos1)
-            val localDateTime = LocalDateTime.parse(wert4.replace(" ","T"))
-            val localDateTime2 = LocalDateTime.parse(datumanfang.replace(" ","T"))
-            val localDateTime3 = LocalDateTime.parse(datumende.replace(" ","T"))
-            if (localDateTime >= localDateTime2 && localDateTime <= localDateTime3 ) {
+            val localDateTime = LocalDateTime.parse(wert4.replace(" ", "T"))
+            val localDateTime2 = LocalDateTime.parse(datumanfang.replace(" ", "T"))
+            val localDateTime3 = LocalDateTime.parse(datumende.replace(" ", "T"))
+            if (localDateTime >= localDateTime2 && localDateTime <= localDateTime3) {
                 Liste2.add(wert3)
                 zaehler = zaehler + 1
             }
@@ -69,20 +70,19 @@ fun datenaufbereitung(zeile: String) {
 }
 
 fun schreiben() {
-
     try {
-        val fw = FileWriter(path  + File.separator + fileName2, true)
+        val fw = FileWriter(path + File.separator + fileName2, true)
 
-    var zaehler2: Long  = 0
-    Liste2.forEach { (it)
-        zaehler2 = zaehler2 + 1
-        val text = it  + System.getProperty("line.separator")
+        var zaehler2: Long = 0
+        Liste2.forEach {
+            zaehler2 = zaehler2 + 1
+            val text = it + System.getProperty("line.separator")
             fw.write(text)
-        var percentage = (zaehler2.toDouble() / zaehler.toDouble()) * 100
-        var prozent: Int = percentage.toInt()
-        print( "   " + prozent.toString() + "% \r")
+            var percentage = (zaehler2.toDouble() / zaehler.toDouble()) * 100
+            var prozent: Int = percentage.toInt()
+            print("   $prozent% \r")
         }
-                fw.close()
-            } catch (e: IOException) {
-            }
+        fw.close()
+    } catch (e: IOException) {
+    }
 }
